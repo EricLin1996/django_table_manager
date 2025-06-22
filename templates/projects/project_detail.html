@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+
+{% block title %}项目详情 - {{ project.project_number|default:"未设置" }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-file-text"></i> 项目详情</h2>
+            <div class="btn-group">
+                <a href="{% url 'project_list' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> 返回列表
+                </a>
+                <a href="{% url 'project_edit' project.pk %}" class="btn btn-primary">
+                    <i class="bi bi-pencil"></i> 编辑项目
+                </a>
+            </div>
+        </div>
+        
+        <!-- 基本信息（只读） -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-info-circle"></i> 基本信息（只读）</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">名称</label>
+                        <div class="form-control-plaintext border rounded p-2 bg-light">
+                            {{ project.sub_project|default:"未设置" }}
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">项目状态</label>
+                        <div class="form-control-plaintext border rounded p-2 bg-light">
+                            {% if project.status %}
+                                <span class="badge {{ project.get_status_badge_class }}">{{ project.get_status_display_custom }}</span>
+                            {% else %}
+                                未设置
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">巡查日期明细（共几次）</label>
+                        <div class="form-control-plaintext border rounded p-2 bg-light">
+                            {{ project.inspection_details|default:"未设置" }}
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label text-muted">现场开单记录明细（共几项）</label>
+                        <div class="form-control-plaintext border rounded p-2 bg-light">
+                            {{ project.on_site_records|default:"未设置" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 可修改信息 -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-pencil-square"></i> 详细信息</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- 第一行 -->
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label text-muted">项目编号</label>
+                        <div class="form-control-plaintext border rounded p-2">
+                            {{ project.project_number|default:"未设置" }}
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label text-muted">日期</label>
+                        <div class="form-control-plaintext border rounded p-2">
+                            {% if project.date %}
+                            <span class="badge bg-primary">{{ project.date }}</span>
+                            {% else %}
+                            未设置
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label text-muted">工程期限</label>
+                        <div class="form-control-plaintext border rounded p-2">
+                            {{ project.construction_period|default:"未设置" }}
+                        </div>
+                    </div>
+                    
+                    <!-- 第二行 -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">开工日期</label>
+                        <div class="form-control-plaintext border rounded p-2">
+                            {% if project.start_date %}
+                            <span class="badge bg-info">{{ project.start_date }}</span>
+                            {% else %}
+                            未设置
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">竣工日期</label>
+                        <div class="form-control-plaintext border rounded p-2">
+                            {% if project.completion_date %}
+                            <span class="badge bg-success">{{ project.completion_date }}</span>
+                            {% else %}
+                            未设置
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- 第三行 -->
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label text-muted">地址</label>
+                        <div class="form-control-plaintext border rounded p-2">
+                            {{ project.address|default:"未设置" }}
+                        </div>
+                    </div>
+                    
+                    <!-- 第四行 -->
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label text-muted">建设单位</label>
+                        <div class="form-control-plaintext border rounded p-2">
+                            {{ project.construction_unit|default:"未设置" }}
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label text-muted">联系人</label>
+                        <div class="form-control-plaintext border rounded p-2">
+                            {{ project.contact_person|default:"未设置" }}
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label text-muted">电话</label>
+                        <div class="form-control-plaintext border rounded p-2">
+                            {{ project.phone|default:"未设置" }}
+                        </div>
+                    </div>
+                    
+                    <!-- 第五行 -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">施工单位</label>
+                        <div class="form-control-plaintext border rounded p-2">
+                            {{ project.contractor|default:"未设置" }}
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">施工单位联系人</label>
+                        <div class="form-control-plaintext border rounded p-2">
+                            {{ project.contractor_contact|default:"未设置" }}
+                        </div>
+                    </div>
+                    
+                    <!-- 第六行 -->
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label text-muted">业主</label>
+                        <div class="form-control-plaintext border rounded p-2">
+                            {{ project.owner|default:"未设置" }}
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label text-muted">面积</label>
+                        <div class="form-control-plaintext border rounded p-2">
+                            {% if project.area %}
+                            <span class="badge bg-secondary">{{ project.area }} 平方米</span>
+                            {% else %}
+                            未设置
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label text-muted">建安造价</label>
+                        <div class="form-control-plaintext border rounded p-2">
+                            {% if project.construction_cost %}
+                            <span class="badge bg-warning text-dark">{{ project.construction_cost }} 元</span>
+                            {% else %}
+                            未设置
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- 第七行 -->
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label text-muted">整改完成情况明细（完成几项）</label>
+                        <div class="form-control-plaintext border rounded p-2">
+                            {% if project.rectification_details is not None %}
+                            <span class="badge bg-info">{{ project.rectification_details }} 项</span>
+                            {% else %}
+                            未设置
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- 第八行 -->
+                    <div class="col-md-12">
+                        <label class="form-label text-muted">备注</label>
+                        <div class="form-control-plaintext border rounded p-2" style="min-height: 60px;">
+                            {{ project.remarks|default:"未设置" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 系统信息 -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-clock"></i> 系统信息</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <small class="text-muted">
+                            <i class="bi bi-calendar-plus"></i> 创建时间: {{ project.created_at|date:"Y-m-d H:i:s" }}
+                        </small>
+                    </div>
+                    <div class="col-md-6">
+                        <small class="text-muted">
+                            <i class="bi bi-calendar-check"></i> 最后更新: {{ project.updated_at|date:"Y-m-d H:i:s" }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

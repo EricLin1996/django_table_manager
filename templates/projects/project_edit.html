@@ -1,0 +1,284 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}编辑项目 - {{ project.project_number|default:"未设置" }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-pencil-square"></i> 编辑项目</h2>
+            <div class="btn-group">
+                <a href="{% url 'project_detail' project.pk %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> 返回详情
+                </a>
+                <a href="{% url 'project_list' %}" class="btn btn-outline-primary">
+                    <i class="bi bi-list-ul"></i> 返回列表
+                </a>
+            </div>
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <!-- 只读信息提示 -->
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i>
+                <strong>提示：</strong>只能修改下面的字段，其他字段为只读信息。
+            </div>
+            
+            <!-- 可修改字段 -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-pencil"></i> 可修改信息</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- 第一行 -->
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.project_number.id_for_label }}" class="form-label">项目编号</label>
+                            {{ form.project_number }}
+                            {% if form.project_number.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.project_number.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.date.id_for_label }}" class="form-label">日期</label>
+                            {{ form.date }}
+                            {% if form.date.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.date.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.construction_period.id_for_label }}" class="form-label">工程期限</label>
+                            {{ form.construction_period }}
+                            {% if form.construction_period.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.construction_period.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- 第二行 -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.start_date.id_for_label }}" class="form-label">开工日期</label>
+                            {{ form.start_date }}
+                            {% if form.start_date.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.start_date.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.completion_date.id_for_label }}" class="form-label">竣工日期</label>
+                            {{ form.completion_date }}
+                            {% if form.completion_date.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.completion_date.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- 第三行 -->
+                        <div class="col-md-12 mb-3">
+                            <label for="{{ form.address.id_for_label }}" class="form-label">地址</label>
+                            {{ form.address }}
+                            {% if form.address.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.address.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- 第四行 -->
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.construction_unit.id_for_label }}" class="form-label">建设单位</label>
+                            {{ form.construction_unit }}
+                            {% if form.construction_unit.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.construction_unit.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.contact_person.id_for_label }}" class="form-label">联系人</label>
+                            {{ form.contact_person }}
+                            {% if form.contact_person.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.contact_person.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.phone.id_for_label }}" class="form-label">电话</label>
+                            {{ form.phone }}
+                            {% if form.phone.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.phone.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- 第五行 -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.contractor.id_for_label }}" class="form-label">施工单位</label>
+                            {{ form.contractor }}
+                            {% if form.contractor.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.contractor.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.contractor_contact.id_for_label }}" class="form-label">施工单位联系人</label>
+                            {{ form.contractor_contact }}
+                            {% if form.contractor_contact.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.contractor_contact.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- 第六行 -->
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.owner.id_for_label }}" class="form-label">业主</label>
+                            {{ form.owner }}
+                            {% if form.owner.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.owner.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.area.id_for_label }}" class="form-label">面积（平方米）</label>
+                            {{ form.area }}
+                            {% if form.area.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.area.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.construction_cost.id_for_label }}" class="form-label">建安造价（元）</label>
+                            {{ form.construction_cost }}
+                            {% if form.construction_cost.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.construction_cost.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- 第七行 -->
+                        <div class="col-md-12 mb-3">
+                            <label for="{{ form.rectification_details.id_for_label }}" class="form-label">整改完成情况明细（完成几项）</label>
+                            {{ form.rectification_details }}
+                            {% if form.rectification_details.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.rectification_details.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- 第八行 -->
+                        <div class="col-md-12 mb-3">
+                            <label for="{{ form.remarks.id_for_label }}" class="form-label">备注</label>
+                            {{ form.remarks }}
+                            {% if form.remarks.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.remarks.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'project_detail' project.pk %}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> 取消
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> 保存更改
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        
+        <!-- 只读信息显示 -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-lock"></i> 只读信息</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">名称</label>
+                        <div class="form-control-plaintext border rounded p-2 bg-light">
+                            {{ project.sub_project|default:"未设置" }}
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">项目状态</label>
+                        <div class="form-control-plaintext border rounded p-2 bg-light">
+                            {% if project.status %}
+                                <span class="badge {{ project.get_status_badge_class }}">{{ project.get_status_display_custom }}</span>
+                            {% else %}
+                                未设置
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">巡查日期明细（共几次）</label>
+                        <div class="form-control-plaintext border rounded p-2 bg-light">
+                            {{ project.inspection_details|default:"未设置" }}
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label text-muted">现场开单记录明细（共几项）</label>
+                        <div class="form-control-plaintext border rounded p-2 bg-light">
+                            {{ project.on_site_records|default:"未设置" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

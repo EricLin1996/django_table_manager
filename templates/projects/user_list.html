@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block title %}用户管理 - 项目管理系统{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-people"></i> 用户管理</h2>
+            <div class="btn-group">
+                <a href="{% url 'project_list' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> 返回项目列表
+                </a>
+                <a href="{% url 'create_user' %}" class="btn btn-primary">
+                    <i class="bi bi-person-plus"></i> 创建新用户
+                </a>
+            </div>
+        </div>
+        
+        <!-- 用户列表 -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">系统用户列表</h5>
+            </div>
+            
+            {% if profiles %}
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>操作</th>
+                            <th>用户名</th>
+                            <th>姓名</th>
+                            <th>邮箱</th>
+                            <th>所属单位</th>
+                            <th>用户类型</th>
+                            <th>状态</th>
+                            <th>最后登录</th>
+                            <th>创建时间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for profile in profiles %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'edit_user' profile.user.id %}" class="btn btn-sm btn-outline-primary" title="编辑用户">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <strong>{{ profile.user.username }}</strong>
+                            </td>
+                            <td>
+                                {% if profile.user.first_name or profile.user.last_name %}
+                                {{ profile.user.last_name }}{{ profile.user.first_name }}
+                                {% else %}
+                                <span class="text-muted">未设置</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if profile.user.email %}
+                                <a href="mailto:{{ profile.user.email }}">{{ profile.user.email }}</a>
+                                {% else %}
+                                <span class="text-muted">未设置</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if profile.organization %}
+                                <span class="badge bg-info">{{ profile.organization }}</span>
+                                {% else %}
+                                <span class="text-muted">未设置</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if profile.is_admin %}
+                                <span class="badge bg-danger">
+                                    <i class="bi bi-shield-check"></i> 管理员
+                                </span>
+                                {% else %}
+                                <span class="badge bg-secondary">
+                                    <i class="bi bi-person"></i> 普通用户
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if profile.user.is_active %}
+                                <span class="badge bg-success">
+                                    <i class="bi bi-check-circle"></i> 活跃
+                                </span>
+                                {% else %}
+                                <span class="badge bg-warning">
+                                    <i class="bi bi-pause-circle"></i> 停用
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if profile.user.last_login %}
+                                <small class="text-muted">
+                                    {{ profile.user.last_login|date:"Y-m-d H:i" }}
+                                </small>
+                                {% else %}
+                                <span class="text-muted">从未登录</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <small class="text-muted">
+                                    {{ profile.created_at|date:"Y-m-d H:i" }}
+                                </small>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="card-footer">
+                <div class="text-muted small">
+                    共 {{ profiles.count }} 个用户
+                </div>
+            </div>
+            
+            {% else %}
+            <div class="card-body text-center py-5">
+                <i class="bi bi-people text-muted" style="font-size: 3rem;"></i>
+                <p class="text-muted mt-3 mb-0">暂无用户数据</p>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- 统计信息 -->
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <div class="card text-center stats-card">
+                    <div class="card-body">
+                        <h3 class="text-primary">{{ profiles.count }}</h3>
+                        <p class="text-muted mb-0">总用户数</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center stats-card">
+                    <div class="card-body">
+                        <h3 class="text-danger">
+                            {% for profile in profiles %}{% if profile.is_admin %}{% if forloop.first %}1{% else %}{{ forloop.counter }}{% endif %}{% endif %}{% empty %}0{% endfor %}
+                        </h3>
+                        <p class="text-muted mb-0">管理员</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center stats-card">
+                    <div class="card-body">
+                        <h3 class="text-secondary">
+                            {% for profile in profiles %}{% if not profile.is_admin %}{% if forloop.first %}1{% else %}{{ forloop.counter }}{% endif %}{% endif %}{% empty %}0{% endfor %}
+                        </h3>
+                        <p class="text-muted mb-0">普通用户</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center stats-card">
+                    <div class="card-body">
+                        <h3 class="text-success">
+                            {% for profile in profiles %}{% if profile.user.is_active %}{% if forloop.first %}1{% else %}{{ forloop.counter }}{% endif %}{% endif %}{% empty %}0{% endfor %}
+                        </h3>
+                        <p class="text-muted mb-0">活跃用户</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}创建用户 - 项目管理系统{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-person-plus"></i> 创建新用户</h2>
+            <div class="btn-group">
+                <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> 返回用户列表
+                </a>
+                <a href="{% url 'project_list' %}" class="btn btn-outline-primary">
+                    <i class="bi bi-list-ul"></i> 返回项目列表
+                </a>
+            </div>
+        </div>
+        
+        <!-- 管理员权限提示 -->
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i>
+            <strong>管理员权限：</strong>您可以创建新用户并设置其权限级别。
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-person-gear"></i> 用户信息</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            <div class="row">
+                                <!-- 用户名 -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.username.id_for_label }}" class="form-label">
+                                        <i class="bi bi-person"></i> {{ form.username.label }} *
+                                    </label>
+                                    {{ form.username }}
+                                    {% if form.username.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.username.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    <div class="form-text">用户登录时使用的用户名</div>
+                                </div>
+                                
+                                <!-- 邮箱 -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.email.id_for_label }}" class="form-label">
+                                        <i class="bi bi-envelope"></i> {{ form.email.label }}
+                                    </label>
+                                    {{ form.email }}
+                                    {% if form.email.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.email.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    <div class="form-text">可选，用于找回密码等功能</div>
+                                </div>
+                                
+                                <!-- 姓 -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.last_name.id_for_label }}" class="form-label">
+                                        <i class="bi bi-person-badge"></i> {{ form.last_name.label }}
+                                    </label>
+                                    {{ form.last_name }}
+                                    {% if form.last_name.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.last_name.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- 名 -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.first_name.id_for_label }}" class="form-label">
+                                        <i class="bi bi-person-badge"></i> {{ form.first_name.label }}
+                                    </label>
+                                    {{ form.first_name }}
+                                    {% if form.first_name.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.first_name.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- 密码 -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.password.id_for_label }}" class="form-label">
+                                        <i class="bi bi-lock"></i> {{ form.password.label }} *
+                                    </label>
+                                    {{ form.password }}
+                                    {% if form.password.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.password.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    <div class="form-text">至少8个字符，建议包含字母和数字</div>
+                                </div>
+                                
+                                <!-- 确认密码 -->
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.password_confirm.id_for_label }}" class="form-label">
+                                        <i class="bi bi-lock-fill"></i> {{ form.password_confirm.label }} *
+                                    </label>
+                                    {{ form.password_confirm }}
+                                    {% if form.password_confirm.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.password_confirm.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    <div class="form-text">请再次输入密码进行确认</div>
+                                </div>
+                                
+                                <!-- 所属单位 -->
+                                <div class="col-12 mb-3">
+                                    <label for="{{ form.organization.id_for_label }}" class="form-label">
+                                        <i class="bi bi-building"></i> {{ form.organization.label }}
+                                    </label>
+                                    {{ form.organization }}
+                                    {% if form.organization.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.organization.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    <div class="form-text">普通用户只能查看和编辑所属单位的项目数据，管理员可查看所有数据</div>
+                                </div>
+                                
+                                <!-- 用户权限 -->
+                                <div class="col-12 mb-3">
+                                    <div class="card bg-light">
+                                        <div class="card-body">
+                                            <h6 class="card-title">
+                                                <i class="bi bi-shield-check"></i> 用户权限设置
+                                            </h6>
+                                            <div class="form-check form-switch">
+                                                {{ form.is_admin }}
+                                                <label class="form-check-label" for="{{ form.is_admin.id_for_label }}">
+                                                    {{ form.is_admin.label }}
+                                                </label>
+                                            </div>
+                                            {% if form.is_admin.errors %}
+                                            <div class="text-danger small mt-1">
+                                                {% for error in form.is_admin.errors %}
+                                                {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                            {% endif %}
+                                            <div class="form-text mt-2">
+                                                <strong>管理员权限说明：</strong><br>
+                                                • <span class="text-success">管理员</span>：可以创建用户、查看和修改报表<br>
+                                                • <span class="text-secondary">普通用户</span>：只能查看和修改报表，无法创建用户
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'user_list' %}" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> 取消
+                            </a>
+                            <button type="submit" class="btn btn-primary" form="user-form">
+                                <i class="bi bi-check-circle"></i> 创建用户
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 为表单添加ID以便提交按钮引用
+    const form = document.querySelector('form');
+    if (form) {
+        form.id = 'user-form';
+    }
+    
+    // 密码强度检查
+    const passwordField = document.getElementById('{{ form.password.id_for_label }}');
+    const confirmField = document.getElementById('{{ form.password_confirm.id_for_label }}');
+    
+    if (passwordField && confirmField) {
+        function checkPasswords() {
+            if (passwordField.value && confirmField.value) {
+                if (passwordField.value === confirmField.value) {
+                    confirmField.classList.remove('is-invalid');
+                    confirmField.classList.add('is-valid');
+                } else {
+                    confirmField.classList.remove('is-valid');
+                    confirmField.classList.add('is-invalid');
+                }
+            } else {
+                confirmField.classList.remove('is-valid', 'is-invalid');
+            }
+        }
+        
+        passwordField.addEventListener('input', checkPasswords);
+        confirmField.addEventListener('input', checkPasswords);
+    }
+});
+</script>
+{% endblock %} 
