@@ -163,20 +163,20 @@
 
     <!-- 搜索表单 -->
     <div class="row mb-4">
-        <div class="col-md-6">
-            <form method="get" class="d-flex">
+        <div class="col-12">
+            <form method="get" class="d-flex align-items-center">
                 <input type="text" 
                        name="search" 
                        value="{{ search_query }}" 
                        placeholder="搜索项目编号、子项目、建设单位或地址..." 
-                       class="form-control me-2"
-                       style="min-width: 300px;">
-                <button type="submit" class="btn btn-primary">
+                       class="form-control me-3"
+                       style="flex: 1; max-width: 500px;">
+                <button type="submit" class="btn btn-primary px-4">
                     <i class="fas fa-search me-1"></i>
                     搜索
                 </button>
                 {% if search_query %}
-                <a href="{% url 'project_list' %}" class="btn btn-outline-secondary ms-2">
+                <a href="?{% if sort_by %}sort={{ sort_by }}&order={{ sort_order }}{% endif %}" class="btn btn-outline-secondary ms-2 px-3">
                     <i class="fas fa-times me-1"></i>
                     清除
                 </a>
@@ -195,13 +195,41 @@
                             <th class="sticky-col-1">操作</th>
                             <th class="sticky-col-2">项目编号</th>
                             <th class="sticky-col-3">名称</th>
-                            <th>项目状态</th>
+                            <th>
+                                项目状态
+                                <a href="?sort=status&order={% if sort_by == 'status' and sort_order == 'asc' %}desc{% else %}asc{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                                   class="text-decoration-none ms-1">
+                                    {% if sort_by == 'status' %}
+                                        {% if sort_order == 'asc' %}
+                                            <i class="fas fa-sort-up text-primary"></i>
+                                        {% else %}
+                                            <i class="fas fa-sort-down text-primary"></i>
+                                        {% endif %}
+                                    {% else %}
+                                        <i class="fas fa-sort text-muted"></i>
+                                    {% endif %}
+                                </a>
+                            </th>
                             <th>建设单位</th>
                             <th class="address-col">地址</th>
                             <th>联系人</th>
                             <th>电话</th>
                             <th>面积(㎡)</th>
-                            <th class="date-col">开工日期</th>
+                            <th class="date-col">
+                                开工日期
+                                <a href="?sort=start_date&order={% if sort_by == 'start_date' and sort_order == 'asc' %}desc{% else %}asc{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                                   class="text-decoration-none ms-1">
+                                    {% if sort_by == 'start_date' %}
+                                        {% if sort_order == 'asc' %}
+                                            <i class="fas fa-sort-up text-primary"></i>
+                                        {% else %}
+                                            <i class="fas fa-sort-down text-primary"></i>
+                                        {% endif %}
+                                    {% else %}
+                                        <i class="fas fa-sort text-muted"></i>
+                                    {% endif %}
+                                </a>
+                            </th>
                             <th class="date-col">竣工日期</th>
                             <th>施工单位</th>
                             <th>施工联系人</th>
@@ -331,9 +359,9 @@
                                 <div class="text-muted">
                                     <i class="fas fa-search fa-3x mb-3"></i>
                                     <p class="h5">没有找到匹配的项目</p>
-                                    {% if search_query %}
-                                        <p>尝试修改搜索条件或 <a href="{% url 'project_list' %}">查看全部项目</a></p>
-                                    {% endif %}
+                                                        {% if search_query %}
+                        <p>尝试修改搜索条件或 <a href="?{% if sort_by %}sort={{ sort_by }}&order={{ sort_order }}{% endif %}">查看全部项目</a></p>
+                    {% endif %}
                                 </div>
                             </td>
                         </tr>
@@ -350,12 +378,12 @@
         <ul class="pagination justify-content-center">
             {% if page_obj.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}">
+                    <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}&order={{ sort_order }}{% endif %}">
                         <i class="fas fa-angle-double-left"></i>
                     </a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}&order={{ sort_order }}{% endif %}">
                         <i class="fas fa-angle-left"></i>
                     </a>
                 </li>
@@ -368,19 +396,19 @@
                     </li>
                 {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}">{{ num }}</a>
+                        <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}&order={{ sort_order }}{% endif %}">{{ num }}</a>
                     </li>
                 {% endif %}
             {% endfor %}
 
             {% if page_obj.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}&order={{ sort_order }}{% endif %}">
                         <i class="fas fa-angle-right"></i>
                     </a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}&order={{ sort_order }}{% endif %}">
                         <i class="fas fa-angle-double-right"></i>
                     </a>
                 </li>

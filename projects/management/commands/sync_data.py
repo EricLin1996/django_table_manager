@@ -30,7 +30,7 @@ class Command(BaseCommand):
                 select id,parent_id,project_name as zxm_mc
                 from t_project_info where project_type = '1' and parent_id = '0'
             ),t2_sxm as (
-                select id,parent_id,project_name,status
+                select id,parent_id,project_name,project_flag as status
                 from t_project_info where parent_id in (
                 select id from t_project_info where project_type = '1' and parent_id = '0'
                 )

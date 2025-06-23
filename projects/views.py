@@ -235,6 +235,9 @@ def export_projects_excel(request):
 def project_list(request):
     """项目列表视图"""
     search_query = request.GET.get('search', '')
+    sort_by = request.GET.get('sort', '')
+    sort_order = request.GET.get('order', 'asc')
+    
     projects = SubProject.objects.all()
     
     # 检查用户权限并过滤数据
@@ -261,6 +264,44 @@ def project_list(request):
             Q(address__icontains=search_query)
         )
     
+    # 排序逻辑
+    if sort_by == 'status':
+        # 自定义状态排序：正常(1)、待整改(3)、停工(4)、完成(2)
+        from django.db.models import Case, When, IntegerField
+        projects = projects.annotate(
+            status_order=Case(
+                When(status='1', then=1),  # 正常
+                When(status='3', then=2),  # 待整改
+                When(status='4', then=3),  # 停工
+                When(status='2', then=4),  # 完成
+                default=5,
+                output_field=IntegerField()
+            )
+        )
+        if sort_order == 'desc':
+            projects = projects.order_by('-status_order')
+        else:
+            projects = projects.order_by('status_order')
+    elif sort_by == 'start_date':
+        # 开工日期排序，空值排在最后
+        if sort_order == 'desc':
+            projects = projects.order_by('-start_date')
+        else:
+            projects = projects.order_by('start_date')
+    else:
+        # 默认排序：先按状态，再按开工日期（从新到旧）
+        from django.db.models import Case, When, IntegerField
+        projects = projects.annotate(
+            status_order=Case(
+                When(status='1', then=1),  # 正常
+                When(status='3', then=2),  # 待整改
+                When(status='4', then=3),  # 停工
+                When(status='2', then=4),  # 完成
+                default=5,
+                output_field=IntegerField()
+            )
+        ).order_by('status_order', '-start_date')
+    
     # 获取总数量用于显示
     total_count = projects.count()
     
@@ -271,6 +312,8 @@ def project_list(request):
     context = {
         'page_obj': page_obj,
         'search_query': search_query,
+        'sort_by': sort_by,
+        'sort_order': sort_order,
         'is_admin': is_admin,
         'total_count': total_count,
         'user_organization': user_organization,

@@ -47,20 +47,20 @@ class SubProject(models.Model):
     def get_status_display_custom(self):
         """获取项目状态的中文显示"""
         status_mapping = {
-            '0': '未开始',
-            '10': '进行中',
-            '20': '已完结',
-            '30': '已停工'
+            '1': '正常',
+            '2': '完成',
+            '3': '需要整改',
+            '4': '停工'
         }
         return status_mapping.get(self.status, '未知状态')
     
     def get_status_badge_class(self):
         """获取状态对应的CSS样式类"""
         status_class_mapping = {
-            '0': 'bg-secondary',  # 灰色 - 未开始
-            '10': 'bg-primary',   # 蓝色 - 进行中
-            '20': 'bg-success',   # 绿色 - 已完结
-            '30': 'bg-danger'     # 红色 - 已停工
+            '1': 'bg-success',    # 绿色 - 正常
+            '2': 'bg-primary',    # 蓝色 - 完成
+            '3': 'bg-warning',    # 黄色 - 需要整改
+            '4': 'bg-danger'      # 红色 - 停工
         }
         return status_class_mapping.get(self.status, 'bg-secondary')
     
